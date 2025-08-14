@@ -1,0 +1,144 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/Character.h"
+#include "Logging/LogMacros.h"
+#include "ProjectRunnerCharacter.generated.h"
+
+class UInputComponent;
+class USkeletalMeshComponent;
+class UCameraComponent;
+class UInputAction;
+class UInputMappingContext;
+struct FInputActionValue;
+
+DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
+
+UCLASS(config=Game)
+class AProjectRunnerCharacter : public ACharacter
+{
+	GENERATED_BODY()
+
+	/** Pawn mesh: 1st person view (arms; seen only by self) */
+	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
+	USkeletalMeshComponent* Mesh1P;
+
+	/** First person camera */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UCameraComponent* FirstPersonCameraComponent;
+
+	/** MappingContext */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputMappingContext* DefaultMappingContext;
+
+	/** Jump Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* JumpAction;
+
+	/** Move Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* MoveAction;
+	
+public:
+	AProjectRunnerCharacter();
+
+protected:
+	virtual void BeginPlay();
+
+public:
+		
+	/** Look Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* LookAction;
+
+	/** Bool for AnimBP to switch to another animation set */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapon)
+	bool bHasRifle;
+
+	/** Setter to set the bool */
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	void SetHasRifle(bool bNewHasRifle);
+
+	/** Getter for the bool */
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	bool GetHasRifle();
+
+protected:
+	/** Called for movement input */
+	void Move(const FInputActionValue& Value);
+
+	/** Called for looking input */
+	void Look(const FInputActionValue& Value);
+
+protected:
+	// APawn interface
+	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
+	// End of APawn interface
+
+public:
+	/** Returns Mesh1P subobject **/
+	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
+	/** Returns FirstPersonCameraComponent subobject **/
+	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
+
+
+// Health
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Health")
+	float MaxHealth = 3.0f;
+
+	UPROPERTY(VisibleInstanceOnly, Category = "Health")
+	float Health = 3.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Health")
+	float HitLockoutSec = 0.1f;
+
+	bool bHitLocked = false; 
+	FTimerHandle HitLockoutTimer;
+	
+	virtual float TakeDamage (  
+	    float DamageAmount,  
+	    struct FDamageEvent const & DamageEvent,  
+	    class AController * EventInstigator,  
+	    AActor * DamageCauser  
+	) override;
+
+	void ClearHitLock();
+	void Die();
+
+// Dash
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* DashAction;
+
+	UPROPERTY(EditDefaultsOnly, Category="Dash")
+	float DashStrength = 1000.f;
+
+	UPROPERTY(EditDefaultsOnly, Category="Dash")
+	float DashCooldown = 1.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category="Dash")
+	float AirDashMultiplier = 0.3f;
+
+	bool bCanDash = true;
+	FTimerHandle DashCooldownHandle;
+	
+	void Dash();
+	void ResetDash();
+
+// Speed Buff
+	UPROPERTY(EditDefaultsOnly, Category="Speed")
+	float BaseWalkSpeed = 1000.f;
+
+	UPROPERTY(EditDefaultsOnly, Category="Speed")
+	float BuffAmount = 100.f;
+
+	UPROPERTY(EditDefaultsOnly, Category="Speed")
+	float MaxWalkSpeedCap = 1500.f;
+
+	float CurrentWalkSpeed;
+
+	void OnEnemyKilled();
+};
+
