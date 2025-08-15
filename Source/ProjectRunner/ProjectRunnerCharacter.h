@@ -106,8 +106,11 @@ protected:
 	) override;
 
 	void ClearHitLock();
+
+public:
 	void Die();
 
+protected:
 // Dash
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* DashAction;
@@ -139,6 +142,7 @@ protected:
 
 	float CurrentWalkSpeed;
 
+public:
 	void OnEnemyKilled();
 };
 
