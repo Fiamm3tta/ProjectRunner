@@ -115,13 +115,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* DashAction;
 
-	UPROPERTY(EditDefaultsOnly, Category="Dash")
+	UPROPERTY(EditDefaultsOnly, Category = "Dash")
 	float DashStrength = 1000.f;
 
-	UPROPERTY(EditDefaultsOnly, Category="Dash")
+	UPROPERTY(EditDefaultsOnly, Category = "Dash")
 	float DashCooldown = 1.0f;
 
-	UPROPERTY(EditDefaultsOnly, Category="Dash")
+	UPROPERTY(EditDefaultsOnly, Category = "Dash")
 	float AirDashMultiplier = 0.3f;
 
 	bool bCanDash = true;
@@ -131,13 +131,13 @@ protected:
 	void ResetDash();
 
 // Speed Buff
-	UPROPERTY(EditDefaultsOnly, Category="Speed")
+	UPROPERTY(EditDefaultsOnly, Category = "Speed")
 	float BaseWalkSpeed = 1000.f;
 
-	UPROPERTY(EditDefaultsOnly, Category="Speed")
+	UPROPERTY(EditDefaultsOnly, Category = "Speed")
 	float BuffAmount = 100.f;
 
-	UPROPERTY(EditDefaultsOnly, Category="Speed")
+	UPROPERTY(EditDefaultsOnly, Category = "Speed")
 	float MaxWalkSpeedCap = 1500.f;
 
 	float CurrentWalkSpeed;
