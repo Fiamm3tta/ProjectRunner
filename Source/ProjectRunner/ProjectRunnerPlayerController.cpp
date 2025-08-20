@@ -58,6 +58,7 @@ void AProjectRunnerPlayerController::ShowScreen(EUIScreen Screen)
 				SetInputMode(Mode);
 				bShowMouseCursor = false;
 				SetPause(false);
+
 				SetIgnoreLookInput(false);
 				SetIgnoreMoveInput(false);
 			}

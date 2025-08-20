@@ -3,6 +3,11 @@
 #include "ProjectRunnerProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
+#include "Engine/DamageEvents.h"
+#include "GameFramework/Actor.h"
+#include "Kismet/GameplayStatics.h"
+#include "ProjectRunnerCharacter.h"
+#include "TurretBase.h"
 
 AProjectRunnerProjectile::AProjectRunnerProjectile() 
 {
@@ -39,5 +44,19 @@ void AProjectRunnerProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* Other
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 
 		Destroy();
+	}
+
+	if(AProjectRunnerCharacter* PlayerCharacter = Cast<AProjectRunnerCharacter>(OtherActor))
+	{
+		FDamageEvent DamageEvent;
+		AController* InstigatorController = GetInstigatorController();
+		AActor* DamageCauser = this;
+		PlayerCharacter->TakeDamage(DamageAmount, DamageEvent, InstigatorController, DamageCauser);
+	}
+	else if(ATurretBase* Turret = Cast<ATurretBase>(OtherActor))
+	{
+		Turret->Destroy();
+		AProjectRunnerCharacter* PC = Cast<AProjectRunnerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		PC->OnEnemyKilled();
 	}
 }
