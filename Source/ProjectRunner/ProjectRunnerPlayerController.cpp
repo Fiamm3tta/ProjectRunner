@@ -5,6 +5,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 void AProjectRunnerPlayerController::BeginPlay()
 {
@@ -19,7 +20,15 @@ void AProjectRunnerPlayerController::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("BeginPlay"));
 	}
 
-	ShowScreen(EUIScreen::HUD);
+	FString MapName = UGameplayStatics::GetCurrentLevelName(GetWorld(), true);
+	if(MapName == "MainMenuMap")
+	{
+		ShowScreen(EUIScreen::MainMenu);
+	}
+	else
+	{
+		ShowScreen(EUIScreen::HUD);
+	}
 }
 
 void AProjectRunnerPlayerController::SetupInputComponent()

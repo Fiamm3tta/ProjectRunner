@@ -2,6 +2,7 @@
 
 #include "ProjectRunnerCharacter.h"
 #include "ProjectRunnerProjectile.h"
+#include "ProjectRunnerPlayerController.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -11,6 +12,7 @@
 #include "InputActionValue.h"
 #include "Engine/LocalPlayer.h"
 #include "GameFramework/CharacterMovementComponent.h"
+
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -134,6 +136,8 @@ float AProjectRunnerCharacter::TakeDamage (float DamageAmount, struct FDamageEve
 	Health = FMath::Clamp(Health - DamageAmount, 0.f, MaxHealth);
 	if(Health <= 0.f) Die();
 
+	CurrentWalkSpeed = BaseWalkSpeed;
+
 	return OldHealth - Health;
 }
 
@@ -144,6 +148,8 @@ void AProjectRunnerCharacter::ClearHitLock()
 
 void AProjectRunnerCharacter::Die()
 {
+	AProjectRunnerPlayerController* PlayerController = Cast<AProjectRunnerPlayerController>(GetWorld()->GetFirstPlayerController());
+	PlayerController->ShowScreen(EUIScreen::Death);
 	UE_LOG(LogTemplateCharacter, Warning, TEXT("Player died"));
 }
 
@@ -171,7 +177,6 @@ void AProjectRunnerCharacter::Dash()
 
 	bCanDash = false;
 	GetWorldTimerManager().SetTimer(DashCooldownHandle, this, &AProjectRunnerCharacter::ResetDash, DashCooldown, false);
-	
 }
 
 void AProjectRunnerCharacter::ResetDash()
@@ -180,6 +185,7 @@ void AProjectRunnerCharacter::ResetDash()
 	UE_LOG(LogTemplateCharacter, Log, TEXT("Dash cooldown ready"));
 }
 
+// Speed buff
 void AProjectRunnerCharacter::OnEnemyKilled()
 {
 	CurrentWalkSpeed = FMath::Min(CurrentWalkSpeed + BuffAmount, MaxWalkSpeedCap);

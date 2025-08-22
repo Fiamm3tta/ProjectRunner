@@ -13,6 +13,9 @@ class AProjectRunnerGameMode : public AGameModeBase
 
 public:
 	AProjectRunnerGameMode();
+
+	UFUNCTION(BlueprintCallable, Category = "Game")
+	void HandleLevelClear();
 };
 
 
