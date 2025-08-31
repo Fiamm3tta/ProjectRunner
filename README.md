@@ -33,5 +33,5 @@
 ## 개발자
 - **박지훈**
   - 언리얼 엔진 5 기반 개인 프로젝트
-  - [email](wlehfdl0817@naver.com)
-  - [github](https://github.com/Fiamm3tta) 
+  - email: wlehfdl0817@naver.com
+  - github: [https://github.com/Fiamm3tta](https://github.com/Fiamm3tta) 
