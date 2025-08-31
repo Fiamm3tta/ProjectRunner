@@ -89,7 +89,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Health")
 	float MaxHealth = 3.0f;
 
-	UPROPERTY(VisibleInstanceOnly, Category = "Health")
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Health")
 	float Health = 3.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Health")
@@ -124,10 +124,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Dash")
 	float AirDashMultiplier = 0.3f;
 
-	bool bCanDash = true;
+	UPROPERTY(BlueprintReadOnly, Category = "Dash")
 	FTimerHandle DashCooldownHandle;
 	
+	bool bCanDash = true;
+	
 	void Dash();
+
+	UFUNCTION()
 	void ResetDash();
 
 // Speed Buff

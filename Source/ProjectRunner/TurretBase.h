@@ -48,11 +48,12 @@ protected:
 	UPROPERTY()
 	APawn* PlayerPawn = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	float FireRate = 2.f;
+	FTimerHandle FireRateTimerHandle;
+
 	void RotateTurret(FVector LookAtTarget);
 	bool InFireRange();
 	void CheckFireCondition();
 	void Fire();
-
-	float FireRate = 2.f;
-	FTimerHandle FireRateTimerHandle;
 };

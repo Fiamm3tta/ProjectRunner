@@ -52,11 +52,15 @@ void AProjectRunnerProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* Other
 		AController* InstigatorController = GetInstigatorController();
 		AActor* DamageCauser = this;
 		PlayerCharacter->TakeDamage(DamageAmount, DamageEvent, InstigatorController, DamageCauser);
+
+		Destroy();
 	}
 	else if(ATurretBase* Turret = Cast<ATurretBase>(OtherActor))
 	{
 		Turret->Destroy();
 		AProjectRunnerCharacter* PC = Cast<AProjectRunnerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 		PC->OnEnemyKilled();
+
+		Destroy();
 	}
 }
