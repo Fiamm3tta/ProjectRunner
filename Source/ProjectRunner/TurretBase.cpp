@@ -6,8 +6,10 @@
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
-#include "ProjectRunnerProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "ProjectRunnerProjectile.h"
+#include "ProjectRunnerCharacter.h"
+#include "ProjectRunnerGameMode.h"
 
 // Sets default values
 ATurretBase::ATurretBase()
@@ -99,3 +101,12 @@ void ATurretBase::Fire()
 	}
 }
 
+void ATurretBase::DestroyTurret()
+{
+	AProjectRunnerCharacter* PC = Cast<AProjectRunnerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (PC) PC->OnEnemyKilled();
+	AProjectRunnerGameMode* GM = GetWorld()->GetAuthGameMode<AProjectRunnerGameMode>();
+	if (GM) GM->AddKill();
+
+	Destroy();
+}

@@ -57,9 +57,7 @@ void AProjectRunnerProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* Other
 	}
 	else if(ATurretBase* Turret = Cast<ATurretBase>(OtherActor))
 	{
-		Turret->Destroy();
-		AProjectRunnerCharacter* PC = Cast<AProjectRunnerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-		PC->OnEnemyKilled();
+		Turret->DestroyTurret();
 
 		Destroy();
 	}

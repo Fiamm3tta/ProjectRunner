@@ -52,8 +52,11 @@ protected:
 	float FireRate = 2.f;
 	FTimerHandle FireRateTimerHandle;
 
-	void RotateTurret(FVector LookAtTarget);
 	bool InFireRange();
+	void RotateTurret(FVector LookAtTarget);
 	void CheckFireCondition();
 	void Fire();
+	
+public:
+	void DestroyTurret();
 };
