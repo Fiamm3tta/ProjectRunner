@@ -20,7 +20,7 @@ public:
 	virtual void Shutdown() override;
 
 	UFUNCTION(BlueprintCallable)
-	void StartRun(FName LevelName, bool bHard);
+	void StartRun(FName LevelName);
 
 	UFUNCTION(BlueprintCallable)
 	void FinishRun(float ClearTimeSeconds, bool bOptionA, bool bOptionB);
@@ -32,11 +32,17 @@ public:
 	void LoadOrCreateSave();
 
 	UFUNCTION(BlueprintCallable)
-	bool SaveToDist() const;
+	bool SaveToDist();
 
+	UPROPERTY(BlueprintReadWrite)
 	bool bCurrentHard = false;
+
 private:
+	UPROPERTY(Transient)
 	TObjectPtr<UProjectRunnerSaveGame> SaveCache = nullptr;
+
 	FName CurrentLevel = NAME_None;
 	double RunStartSec = 0.0;
+
+	void EnsureSaveCache();
 };

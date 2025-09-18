@@ -24,8 +24,17 @@ void AProjectRunnerGameMode::BeginPlay()
 	if(GS) GS->StartRun();
 
 	GI = GetGameInstance<UProjectRunnerGameInstance>();
-	FName CurrentLevel(*UGameplayStatics::GetCurrentLevelName(this, true));
-	if(GI) GI->StartRun(CurrentLevel, bHard);
+	if(GI)
+	{
+		bHard = GI->bCurrentHard;
+		if(bHard)
+		{
+			AProjectRunnerCharacter* Character = Cast<AProjectRunnerCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+			Character->SetHealth(1.0f);
+		}
+		FName CurrentLevel(*UGameplayStatics::GetCurrentLevelName(this, true));
+		GI->StartRun(CurrentLevel);
+	}
 }
 
 void AProjectRunnerGameMode::HandleLevelClear()

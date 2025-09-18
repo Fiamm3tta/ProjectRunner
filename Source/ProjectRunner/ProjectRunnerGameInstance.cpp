@@ -15,14 +15,17 @@ void UProjectRunnerGameInstance::Init()
 
 void UProjectRunnerGameInstance::Shutdown()
 {
+#if WITH_EDITOR
+    if (!IsRunningGame()) { Super::Shutdown(); return; }
+#endif
+
     SaveToDist();
     Super::Shutdown();
 }
 
-void UProjectRunnerGameInstance::StartRun(FName LevelName, bool bHard)
+void UProjectRunnerGameInstance::StartRun(FName LevelName)
 {
     CurrentLevel = LevelName;
-    bCurrentHard = bHard;
     RunStartSec = FPlatformTime::Seconds();
 }
 
@@ -45,9 +48,9 @@ void UProjectRunnerGameInstance::FinishRun(float ClearTimeSeconds, bool bOptionA
     else
     {
         Rec.bClearedNormal = true;
-        Rec.BestTimeNormal = FMath::Min(Rec.BestTimeHard, (float)Elapsed);
+        Rec.BestTimeNormal = FMath::Min(Rec.BestTimeNormal, (float)Elapsed);
         Rec.bOptionA = Rec.bOptionA || bOptionA;
-        Rec.bOptionB = Rec.bOptionB || bOptionA;
+        Rec.bOptionB = Rec.bOptionB || bOptionB;
     }
 
     CurrentLevel = NAME_None;
@@ -81,8 +84,26 @@ void UProjectRunnerGameInstance::LoadOrCreateSave()
     }
 }
 
-bool UProjectRunnerGameInstance::SaveToDist() const
+bool UProjectRunnerGameInstance::SaveToDist()
 {
+#if WITH_EDITOR
+    if (!IsRunningGame()) return false;
+#endif
+
+    EnsureSaveCache();
     if(!SaveCache) return false;
-    return UGameplayStatics::SaveGameToSlot(SaveCache, SLOT_NAME, USER_INDEX);
+
+    UProjectRunnerSaveGame* Snapshot = DuplicateObject<UProjectRunnerSaveGame>(SaveCache, this);
+    UProjectRunnerSaveGame* ToSave = Snapshot ? Snapshot : SaveCache.Get();
+
+    return UGameplayStatics::SaveGameToSlot(ToSave, SLOT_NAME, USER_INDEX);
+}
+
+void UProjectRunnerGameInstance::EnsureSaveCache()
+{
+    if (!IsValid(SaveCache))
+    {
+        SaveCache = Cast<UProjectRunnerSaveGame>(
+            UGameplayStatics::CreateSaveGameObject(UProjectRunnerSaveGame::StaticClass()));
+    }
 }

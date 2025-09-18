@@ -30,6 +30,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Game")
 	void AddKill();
 
+	UFUNCTION(BlueprintCallable, Category = "Game")
+	bool GetbHard() { return bHard; }
+
 private:
 	AProjectRunnerGameState* GS;
 	UProjectRunnerGameInstance* GI;

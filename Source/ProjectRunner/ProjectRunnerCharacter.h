@@ -109,6 +109,7 @@ public:
 			AActor * DamageCauser  
 	) override;
 	void Die();
+	void SetHealth(float health) { Health = health; }
 
 protected:
 // Dash
